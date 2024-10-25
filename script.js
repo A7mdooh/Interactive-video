@@ -1,100 +1,98 @@
-/* style.css */
-body {
-    background-color: #1e1e1e;
-    color: #fff;
-    font-family: Arial, sans-serif;
-    text-align: center;
-    margin: 0;
-    padding: 0;
-    transition: background-color 1s;
+// script.js
+let score = 0; // متغير لتتبع النقاط
+let timerInterval; // متغير لتخزين المؤقت
+
+// دالة لاختيار الخيار المناسب
+function chooseOption(option) {
+    clearInterval(timerInterval); // إيقاف أي مؤقت نشط
+    document.getElementById('scene1').classList.add('hidden'); // إخفاء المشهد الأول
+
+    // تحديد الخيار الذي تم اختياره
+    if (option === 'save') {
+        document.getElementById('result-green').classList.remove('hidden'); // إظهار شاشة النجاح
+        playSound('success-sound'); // تشغيل صوت النجاح
+        updateScore(10); // إضافة النقاط
+        startTimer(10, () => {
+            document.getElementById('result-green').classList.add('hidden');
+            document.getElementById('scene2-save').classList.remove('hidden'); // الانتقال إلى المشهد التالي
+        });
+    } else if (option === 'buy') {
+        document.getElementById('result-red').classList.remove('hidden'); // إظهار شاشة الفشل
+        playSound('failure-sound'); // تشغيل صوت الفشل
+        updateScore(-5); // خصم النقاط
+        startTimer(10, () => {
+            document.getElementById('result-red').classList.add('hidden');
+            document.getElementById('scene2-save').classList.remove('hidden'); // الانتقال إلى المشهد التالي
+        });
+    }
 }
 
-.scene, .result {
-    display: none;
-    padding: 50px;
+// دالة للانتقال إلى المشهد التالي
+function nextScene(option) {
+    clearInterval(timerInterval);
+    document.querySelector('.scene.visible').classList.add('hidden'); // إخفاء المشهد الحالي
+
+    if (option === 'invest') {
+        document.getElementById('scene3-invest').classList.remove('hidden'); // إظهار مشهد النجاح في الاستثمار
+        changeBackgroundColor('#32CD32'); // تغيير لون الخلفية
+        playSound('success-sound'); // تشغيل صوت النجاح
+        updateScore(20); // إضافة النقاط
+    } else if (option === 'spend') {
+        document.getElementById('scene3-spend').classList.remove('hidden'); // إظهار مشهد الفشل في الإنفاق
+        changeBackgroundColor('#FF6347'); // تغيير لون الخلفية
+        playSound('failure-sound'); // تشغيل صوت الفشل
+        updateScore(-10); // خصم النقاط
+    }
 }
 
-.visible {
-    display: block;
+// دالة لبدء المؤقت
+function startTimer(duration, onTimeout) {
+    let timeLeft = duration;
+    const timerElement = document.getElementById('timer');
+    timerElement.textContent = timeLeft;
+    timerElement.classList.remove('hidden');
+
+    timerInterval = setInterval(() => {
+        timeLeft -= 1;
+        timerElement.textContent = timeLeft;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            timerElement.classList.add('hidden');
+            onTimeout(); // تنفيذ الدالة عند انتهاء الوقت
+        }
+    }, 1000);
 }
 
-.hidden {
-    display: none;
+// دالة لتحديث النقاط
+function updateScore(points) {
+    score += points;
+    document.getElementById('score').textContent = `النقاط: ${score}`;
 }
 
-.result-green {
-    background-color: #4CAF50;
-    color: #fff;
-    font-size: 24px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+// دالة لتشغيل الأصوات
+function playSound(soundId) {
+    document.getElementById(soundId).play();
 }
 
-.result-red {
-    background-color: #FF6347;
-    color: #fff;
-    font-size: 24px;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+// دالة لإعادة تعيين اللعبة
+function restart() {
+    clearInterval(timerInterval);
+    document.querySelectorAll('.scene, .result').forEach(scene => {
+        scene.classList.add('hidden');
+    });
+    document.getElementById('scene1').classList.remove('hidden');
+    changeBackgroundColor('#1e1e1e');
+    score = 0;
+    updateScore(0);
 }
 
-button {
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    padding: 15px 32px;
-    text-align: center;
-    display: inline-block;
-    font-size: 16px;
-    margin: 10px 5px;
-    cursor: pointer;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, transform 0.2s;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+// دالة لإنهاء القصة
+function finish() {
+    alert('لقد أكملت القصة بنجاح! تذكر دائمًا أهمية القرارات المالية الحكيمة.');
+    restart();
 }
 
-button:hover {
-    background-color: #45a049;
-    transform: translateY(-2px);
-    box-shadow: 0px 6px 8px rgba(0, 0, 0, 0.3);
-}
-
-iframe {
-    margin-top: 20px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-#timer {
-    font-size: 24px;
-    color: #FFD700;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #333;
-    border-radius: 8px;
-    display: inline-block;
-}
-
-#score {
-    position: fixed;
-    top: 10px;
-    right: 10px;
-    font-size: 20px;
-    background-color: #333;
-    color: #fff;
-    padding: 10px;
-    border-radius: 8px;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
-}
-
-h1 {
-    font-size: 28px;
-    margin-bottom: 20px;
-}
-
-p {
-    font-size: 18px;
-    margin-bottom: 20px;
+// دالة لتغيير لون الخلفية
+function changeBackgroundColor(color) {
+    document.body.style.backgroundColor = color;
 }
