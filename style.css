@@ -9,7 +9,7 @@ body {
     transition: background-color 1s;
 }
 
-.scene {
+.scene, .result {
     display: none;
     padding: 50px;
 }
@@ -20,6 +20,18 @@ body {
 
 .hidden {
     display: none;
+}
+
+.result-green {
+    background-color: #4CAF50;
+    color: #fff;
+    font-size: 24px;
+}
+
+.result-red {
+    background-color: #FF6347;
+    color: #fff;
+    font-size: 24px;
 }
 
 button {
@@ -33,13 +45,14 @@ button {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 8px;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
     background-color: #45a049;
 }
 
-#timer {
-    font-size: 24px;
+video {
     margin-top: 20px;
+    border-radius: 8px;
 }
