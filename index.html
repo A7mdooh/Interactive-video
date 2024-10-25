@@ -14,18 +14,29 @@
         <button onclick="chooseOption('buy')">شراء الهاتف</button>
     </div>
 
-    <div id="scene2-save" class="scene hidden">
+    <div id="result-green" class="result hidden">
         <h1>قرار صائب!</h1>
-        <p>لقد وفرت المال لمستقبل أفضل، الآن ماذا عن استثمار جزء منه؟</p>
-        <button onclick="nextScene('invest')">استثمار المال في مهارة جديدة</button>
-        <button onclick="nextScene('spend')">الإنفاق على شيء ترفيهي</button>
-        <div id="timer" class="hidden">10</div>
+        <p>لقد اتخذت قرارًا جيدًا، سننتقل إلى المشهد التالي قريبًا.</p>
+        <video id="success-video" width="600" autoplay muted>
+            <source src="success-video.mp4" type="video/mp4">
+            المتصفح الخاص بك لا يدعم عرض الفيديو.
+        </video>
     </div>
 
-    <div id="scene2-buy" class="scene hidden">
-        <h1>قرار غير حكيم...</h1>
-        <p>لقد خسرت المال ولم يتبق لديك شيء للادخار. حاول أن تكون أكثر حكمة في المرة القادمة.</p>
-        <button onclick="restart()">إعادة المحاولة</button>
+    <div id="result-red" class="result hidden">
+        <h1>قرار غير حكيم!</h1>
+        <p>لقد كان من الأفضل اتخاذ قرار آخر. سننتقل إلى المشهد التالي قريبًا.</p>
+        <video id="failure-video" width="600" autoplay muted>
+            <source src="failure-video.mp4" type="video/mp4">
+            المتصفح الخاص بك لا يدعم عرض الفيديو.
+        </video>
+    </div>
+
+    <div id="scene2-save" class="scene hidden">
+        <h1>مرحلة جديدة!</h1>
+        <p>ماذا تريدين أن تفعلي الآن؟</p>
+        <button onclick="nextScene('invest')">استثمار المال في مهارة جديدة</button>
+        <button onclick="nextScene('spend')">الإنفاق على شيء ترفيهي</button>
     </div>
 
     <div id="scene3-invest" class="scene hidden">
@@ -40,7 +51,6 @@
         <button onclick="restart()">إعادة المحاولة</button>
     </div>
 
-    <audio id="background-music" src="background-music.mp3" loop></audio>
     <audio id="success-sound" src="success.mp3"></audio>
     <audio id="failure-sound" src="failure.mp3"></audio>
 
