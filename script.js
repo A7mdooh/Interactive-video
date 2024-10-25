@@ -1,26 +1,27 @@
 // script.js
-let timerInterval;
-
 function chooseOption(option) {
-    // إيقاف المؤقت السابق (إذا كان موجودًا)
-    clearInterval(timerInterval);
-
     document.getElementById('scene1').classList.add('hidden');
 
     if (option === 'save') {
-        document.getElementById('scene2-save').classList.remove('hidden');
-        changeBackgroundColor('#4CAF50');
+        document.getElementById('result-green').classList.remove('hidden');
         playSound('success-sound');
-        startTimer(10, 'scene2-save'); // تشغيل مؤقت 10 ثوانٍ للمشهد الثاني
+        playVideo('success-video');
+        setTimeout(() => {
+            document.getElementById('result-green').classList.add('hidden');
+            document.getElementById('scene2-save').classList.remove('hidden');
+        }, 5000); // الانتظار لمدة 5 ثوانٍ أو حسب طول الفيديو
     } else if (option === 'buy') {
-        document.getElementById('scene2-buy').classList.remove('hidden');
-        changeBackgroundColor('#FF6347');
+        document.getElementById('result-red').classList.remove('hidden');
         playSound('failure-sound');
+        playVideo('failure-video');
+        setTimeout(() => {
+            document.getElementById('result-red').classList.add('hidden');
+            document.getElementById('scene2-save').classList.remove('hidden');
+        }, 5000); // الانتظار لمدة 5 ثوانٍ أو حسب طول الفيديو
     }
 }
 
 function nextScene(option) {
-    clearInterval(timerInterval);
     document.querySelector('.scene.visible').classList.add('hidden');
 
     if (option === 'invest') {
@@ -34,34 +35,21 @@ function nextScene(option) {
     }
 }
 
-function startTimer(seconds, sceneId) {
-    let timeLeft = seconds;
-    const timerElement = document.getElementById('timer');
-    timerElement.classList.remove('hidden');
-    timerElement.textContent = timeLeft;
+function playSound(soundId) {
+    document.getElementById(soundId).play();
+}
 
-    timerInterval = setInterval(() => {
-        timeLeft -= 1;
-        timerElement.textContent = timeLeft;
-        if (timeLeft <= 0) {
-            clearInterval(timerInterval);
-            timerElement.classList.add('hidden');
-            document.getElementById(sceneId).classList.add('hidden');
-            document.getElementById('scene2-buy').classList.remove('hidden');
-            changeBackgroundColor('#FF6347');
-            playSound('failure-sound');
-        }
-    }, 1000);
+function playVideo(videoId) {
+    const video = document.getElementById(videoId);
+    video.play();
 }
 
 function restart() {
-    clearInterval(timerInterval);
-    document.querySelectorAll('.scene').forEach(scene => {
+    document.querySelectorAll('.scene, .result').forEach(scene => {
         scene.classList.add('hidden');
     });
     document.getElementById('scene1').classList.remove('hidden');
     changeBackgroundColor('#1e1e1e');
-    document.getElementById('background-music').play();
 }
 
 function finish() {
@@ -73,9 +61,7 @@ function changeBackgroundColor(color) {
     document.body.style.backgroundColor = color;
 }
 
-function playSound(soundId) {
-    document.getElementById(soundId).play();
-}
-
-// بدء تشغيل الموسيقى الخلفية
-document.getElementById('background-music').play();
+// تشغيل الموسيقى عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('success-sound').play();
+});
