@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
     <title>البطل الخارق المالي</title>
+    <!-- إضافة مكتبة Anime.js للرسوم المتحركة -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
 </head>
 <body>
     <div id="scene1" class="scene visible">
@@ -45,12 +47,15 @@
         <button onclick="restart()">إعادة المحاولة</button>
     </div>
 
+    <!-- مؤقت ونظام النقاط -->
     <div id="timer" class="hidden">10</div>
     <div id="score">النقاط: 0</div>
 
+    <!-- إضافة الأصوات -->
     <audio id="success-sound" src="success.mp3"></audio>
     <audio id="failure-sound" src="failure.mp3"></audio>
 
+    <!-- تضمين ملف JavaScript -->
     <script src="script.js"></script>
 </body>
 </html>
