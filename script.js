@@ -1,20 +1,37 @@
-// متغيرات لتتبع النقاط والمؤقت
+// متغيرات لتتبع النقاط والمؤقت وسجل القرارات
 let score = 0;
 let timerInterval;
+let decisionHistory = [];
+
+// دالة لعرض التحدي اليومي
+function showDailyChallenge() {
+    const dailyChallenges = [
+        "حاول توفير 20% من دخلك اليومي.",
+        "تجنب شراء المشروبات الغازية اليوم.",
+        "استثمر في تعلم مهارة جديدة بدلاً من شراء شيء ترفيهي.",
+        "قم بتدوين جميع مصاريفك اليوم لتتعرف على أماكن التوفير."
+    ];
+    const randomIndex = Math.floor(Math.random() * dailyChallenges.length);
+    alert(`تحدي اليوم: ${dailyChallenges[randomIndex]}`);
+}
+
+// عرض التحدي اليومي عند بدء اللعبة
+showDailyChallenge();
 
 // دالة لاختيار الخيار المناسب مع إضافة الرسوم المتحركة
 function chooseOption(option) {
-    clearInterval(timerInterval); // إيقاف المؤقت الحالي
+    decisionHistory.push(option);
+    clearInterval(timerInterval);
 
-    // إخفاء المشهد الأول مع تأثير متلاشي
     anime({
         targets: '#scene1',
         opacity: 0,
         duration: 500,
         easing: 'easeInOutQuad',
         complete: () => {
-            document.getElementById('scene1').classList.add('hidden'); // إخفاء المشهد تمامًا
-            showResult(option); // عرض النتيجة بناءً على الخيار
+            document.getElementById('scene1').classList.add('hidden');
+            showResult(option);
+            checkDecisionPattern();
         }
     });
 }
@@ -22,41 +39,26 @@ function chooseOption(option) {
 // دالة لعرض النتيجة بناءً على الخيار
 function showResult(option) {
     if (option === 'save') {
-        document.getElementById('result-green').classList.remove('hidden'); // إظهار شاشة النجاح
+        updateCharacter('happy', 'أحسنت! هذا قرار ذكي.');
+        document.getElementById('result-green').classList.remove('hidden');
         playSound('success-sound');
-        updateScore(10); // إضافة النقاط
+        updateScore(10);
         animateResult('#result-green');
-        startTimer(10, () => {
-            anime({
-                targets: '#result-green',
-                opacity: 0,
-                duration: 500,
-                easing: 'easeInOutQuad',
-                complete: () => {
-                    document.getElementById('result-green').classList.add('hidden');
-                    document.getElementById('scene2-save').classList.remove('hidden');
-                    anime({ targets: '#scene2-save', opacity: [0, 1], duration: 500 });
-                }
-            });
-        });
     } else if (option === 'buy') {
-        document.getElementById('result-red').classList.remove('hidden'); // إظهار شاشة الفشل
+        updateCharacter('sad', 'هذا ليس أفضل قرار.');
+        document.getElementById('result-red').classList.remove('hidden');
         playSound('failure-sound');
-        updateScore(-5); // خصم النقاط
+        updateScore(-5);
         animateResult('#result-red');
-        startTimer(10, () => {
-            anime({
-                targets: '#result-red',
-                opacity: 0,
-                duration: 500,
-                easing: 'easeInOutQuad',
-                complete: () => {
-                    document.getElementById('result-red').classList.add('hidden');
-                    document.getElementById('scene2-save').classList.remove('hidden');
-                    anime({ targets: '#scene2-save', opacity: [0, 1], duration: 500 });
-                }
-            });
-        });
+    }
+}
+
+// دالة للتحقق من نمط القرارات وتخصيص القصة
+function checkDecisionPattern() {
+    if (decisionHistory.slice(-3).every(decision => decision === 'buy')) {
+        displayAiAdvice('يبدو أنك تميل إلى الإنفاق، حاول توفير بعض المال للمستقبل.');
+    } else if (decisionHistory.slice(-3).every(decision => decision === 'save')) {
+        displayAiAdvice('أحسنت، استمر في توفير المال، ويمكنك التفكير في استثمار بعضه.');
     }
 }
 
@@ -73,7 +75,7 @@ function startTimer(duration, onTimeout) {
         if (timeLeft <= 0) {
             clearInterval(timerInterval);
             timerElement.classList.add('hidden');
-            onTimeout(); // تنفيذ الدالة عند انتهاء الوقت
+            onTimeout();
         }
     }, 1000);
 }
@@ -100,6 +102,43 @@ function animateResult(elementId) {
     });
 }
 
+// دالة لتحديث الشخصية التفاعلية
+function updateCharacter(mood, message) {
+    const characterImage = document.getElementById('character-image');
+    const characterText = document.getElementById('character-text');
+    const characterElement = document.getElementById('character');
+
+    if (mood === 'happy') {
+        characterImage.src = 'character_happy.png';
+        characterText.textContent = message;
+    } else if (mood === 'sad') {
+        characterImage.src = 'character_sad.png';
+        characterText.textContent = message;
+    }
+
+    characterElement.classList.remove('hidden');
+    anime({
+        targets: '#character',
+        translateY: [-50, 0],
+        opacity: [0, 1],
+        duration: 800,
+        easing: 'easeOutElastic(1, .8)'
+    });
+
+    setTimeout(() => {
+        anime({
+            targets: '#character',
+            translateY: [0, -50],
+            opacity: [1, 0],
+            duration: 800,
+            easing: 'easeInElastic(1, .8)',
+            complete: () => {
+                characterElement.classList.add('hidden');
+            }
+        });
+    }, 4000);
+}
+
 // دالة لإعادة تعيين اللعبة مع الرسوم المتحركة
 function restart() {
     clearInterval(timerInterval);
@@ -110,53 +149,45 @@ function restart() {
     document.getElementById('scene1').classList.remove('hidden');
     anime({ targets: '#scene1', opacity: [0, 1], duration: 1000 });
     score = 0;
+    decisionHistory = [];
     updateScore(0);
     changeBackgroundColor('#1e1e1e');
 }
 
-// دالة لإنهاء القصة
+// دالة لإنهاء القصة وإنشاء تقرير
 function finish() {
-    alert('لقد أكملت القصة بنجاح! تذكر دائمًا أهمية القرارات المالية الحكيمة.');
+    generateReport();
     restart();
+}
+
+// دالة لإنشاء تقرير مخصص للمستخدم
+function generateReport() {
+    let positiveDecisions = decisionHistory.filter(decision => decision === 'save').length;
+    let negativeDecisions = decisionHistory.filter(decision => decision === 'buy').length;
+
+    let reportMessage = `تقرير الأداء:\n`;
+    reportMessage += `عدد القرارات الجيدة (توفير المال): ${positiveDecisions}\n`;
+    reportMessage += `عدد القرارات غير المثالية (الشراء): ${negativeDecisions}\n`;
+
+    if (positiveDecisions > negativeDecisions) {
+        reportMessage += `أنت على الطريق الصحيح! استمر في اتخاذ القرارات المالية الذكية.`;
+    } else {
+        reportMessage += `حاول تقليل الإنفاق واتخذ قرارات أفضل مستقبلاً.`;
+    }
+
+    alert(reportMessage);
+}
+
+// دالة لعرض النصيحة من الذكاء الاصطناعي
+function displayAiAdvice(advice) {
+    const adviceElement = document.createElement('p');
+    adviceElement.textContent = `نصيحة المساعد الذكي: ${advice}`;
+    adviceElement.style.color = '#FFD700';
+    adviceElement.style.marginTop = '20px';
+    document.body.appendChild(adviceElement);
 }
 
 // دالة لتغيير لون الخلفية
 function changeBackgroundColor(color) {
     document.body.style.backgroundColor = color;
-}
-
-// دالة لطلب نصيحة المساعد الذكي
-async function getAiAdvice(decision) {
-    const apiKey = 'YOUR_API_KEY'; // ضع مفتاح API الخاص بك هنا
-    const prompt = `أعطِ نصيحة مالية لشخص قرر ${decision}.`;
-
-    try {
-        const response = await fetch('https://api.openai.com/v1/completions', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify({
-                model: "text-davinci-004",
-                prompt: prompt,
-                max_tokens: 50
-            })
-        });
-
-        const data = await response.json();
-        const advice = data.choices[0].text.trim();
-        displayAiAdvice(advice);
-    } catch (error) {
-        console.error('Error fetching AI advice:', error);
-        displayAiAdvice('تعذر الحصول على نصيحة المساعد الذكي، حاول مرة أخرى لاحقًا.');
-    }
-}
-
-// دالة لعرض نصيحة المساعد الذكي
-function displayAiAdvice(advice) {
-    const adviceElement = document.getElementById('ai-advice');
-    adviceElement.textContent = `نصيحة المساعد الذكي: ${advice}`;
-    adviceElement.style.display = 'block';
-    adviceElement.style.marginTop = '20px';
 }
