@@ -20,12 +20,16 @@
         <h1>قرار صائب!</h1>
         <p>لقد اتخذت قرارًا جيدًا، سننتقل إلى المشهد التالي قريبًا.</p>
         <iframe id="success-video" width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <button onclick="getAiAdvice('توفير المال')">اطلب نصيحة المساعد الذكي</button>
+        <div id="ai-advice"></div>
     </div>
 
     <div id="result-red" class="result hidden">
         <h1>قرار غير حكيم!</h1>
         <p>لقد كان من الأفضل اتخاذ قرار آخر. سننتقل إلى المشهد التالي قريبًا.</p>
         <iframe id="failure-video" width="560" height="315" src="https://www.youtube.com/embed/5NV6Rdv1a3I?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        <button onclick="getAiAdvice('شراء الهاتف')">اطلب نصيحة المساعد الذكي</button>
+        <div id="ai-advice"></div>
     </div>
 
     <div id="scene2-save" class="scene hidden">
