@@ -1,51 +1,66 @@
-// script.js
-let score = 0; // متغير لتتبع النقاط
-let timerInterval; // متغير لتخزين المؤقت
+// متغيرات لتتبع النقاط والمؤقت
+let score = 0;
+let timerInterval;
 
-// دالة لاختيار الخيار المناسب
+// دالة لاختيار الخيار المناسب مع إضافة الرسوم المتحركة
 function chooseOption(option) {
-    clearInterval(timerInterval); // إيقاف أي مؤقت نشط
-    document.getElementById('scene1').classList.add('hidden'); // إخفاء المشهد الأول
+    clearInterval(timerInterval); // إيقاف المؤقت الحالي
 
-    // تحديد الخيار الذي تم اختياره
+    // إخفاء المشهد الأول مع تأثير متلاشي
+    anime({
+        targets: '#scene1',
+        opacity: 0,
+        duration: 500,
+        easing: 'easeInOutQuad',
+        complete: () => {
+            document.getElementById('scene1').classList.add('hidden'); // إخفاء المشهد تمامًا
+            showResult(option); // عرض النتيجة بناءً على الخيار
+        }
+    });
+}
+
+// دالة لعرض النتيجة بناءً على الخيار
+function showResult(option) {
     if (option === 'save') {
         document.getElementById('result-green').classList.remove('hidden'); // إظهار شاشة النجاح
-        playSound('success-sound'); // تشغيل صوت النجاح
+        playSound('success-sound');
         updateScore(10); // إضافة النقاط
+        animateResult('#result-green');
         startTimer(10, () => {
-            document.getElementById('result-green').classList.add('hidden');
-            document.getElementById('scene2-save').classList.remove('hidden'); // الانتقال إلى المشهد التالي
+            anime({
+                targets: '#result-green',
+                opacity: 0,
+                duration: 500,
+                easing: 'easeInOutQuad',
+                complete: () => {
+                    document.getElementById('result-green').classList.add('hidden');
+                    document.getElementById('scene2-save').classList.remove('hidden');
+                    anime({ targets: '#scene2-save', opacity: [0, 1], duration: 500 });
+                }
+            });
         });
     } else if (option === 'buy') {
         document.getElementById('result-red').classList.remove('hidden'); // إظهار شاشة الفشل
-        playSound('failure-sound'); // تشغيل صوت الفشل
+        playSound('failure-sound');
         updateScore(-5); // خصم النقاط
+        animateResult('#result-red');
         startTimer(10, () => {
-            document.getElementById('result-red').classList.add('hidden');
-            document.getElementById('scene2-save').classList.remove('hidden'); // الانتقال إلى المشهد التالي
+            anime({
+                targets: '#result-red',
+                opacity: 0,
+                duration: 500,
+                easing: 'easeInOutQuad',
+                complete: () => {
+                    document.getElementById('result-red').classList.add('hidden');
+                    document.getElementById('scene2-save').classList.remove('hidden');
+                    anime({ targets: '#scene2-save', opacity: [0, 1], duration: 500 });
+                }
+            });
         });
     }
 }
 
-// دالة للانتقال إلى المشهد التالي
-function nextScene(option) {
-    clearInterval(timerInterval);
-    document.querySelector('.scene.visible').classList.add('hidden'); // إخفاء المشهد الحالي
-
-    if (option === 'invest') {
-        document.getElementById('scene3-invest').classList.remove('hidden'); // إظهار مشهد النجاح في الاستثمار
-        changeBackgroundColor('#32CD32'); // تغيير لون الخلفية
-        playSound('success-sound'); // تشغيل صوت النجاح
-        updateScore(20); // إضافة النقاط
-    } else if (option === 'spend') {
-        document.getElementById('scene3-spend').classList.remove('hidden'); // إظهار مشهد الفشل في الإنفاق
-        changeBackgroundColor('#FF6347'); // تغيير لون الخلفية
-        playSound('failure-sound'); // تشغيل صوت الفشل
-        updateScore(-10); // خصم النقاط
-    }
-}
-
-// دالة لبدء المؤقت
+// دالة لبدء المؤقت مع الرسوم المتحركة
 function startTimer(duration, onTimeout) {
     let timeLeft = duration;
     const timerElement = document.getElementById('timer');
@@ -74,16 +89,29 @@ function playSound(soundId) {
     document.getElementById(soundId).play();
 }
 
-// دالة لإعادة تعيين اللعبة
+// دالة لإضافة الرسوم المتحركة عند عرض النتيجة
+function animateResult(elementId) {
+    anime({
+        targets: elementId,
+        scale: [0.8, 1.2],
+        opacity: [0, 1],
+        duration: 1000,
+        easing: 'easeOutElastic(1, .8)'
+    });
+}
+
+// دالة لإعادة تعيين اللعبة مع الرسوم المتحركة
 function restart() {
     clearInterval(timerInterval);
     document.querySelectorAll('.scene, .result').forEach(scene => {
         scene.classList.add('hidden');
+        anime({ targets: scene, opacity: 0 });
     });
     document.getElementById('scene1').classList.remove('hidden');
-    changeBackgroundColor('#1e1e1e');
+    anime({ targets: '#scene1', opacity: [0, 1], duration: 1000 });
     score = 0;
     updateScore(0);
+    changeBackgroundColor('#1e1e1e');
 }
 
 // دالة لإنهاء القصة
