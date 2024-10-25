@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>البطل الخارق المالي</title>
+</head>
+<body>
+    <div id="scene1" class="scene visible">
+        <h1>البطل الخارق المالي يظهر لإنقاذك!</h1>
+        <p>هل تريدين شراء هاتف جديد أم توفير المال لهدف مستقبلي؟</p>
+        <button onclick="chooseOption('save')">توفير المال</button>
+        <button onclick="chooseOption('buy')">شراء الهاتف</button>
+    </div>
+
+    <div id="scene2-save" class="scene hidden">
+        <h1>قرار صائب!</h1>
+        <p>لقد وفرت المال لمستقبل أفضل، الآن ماذا عن استثمار جزء منه؟</p>
+        <button onclick="nextScene('invest')">استثمار المال في مهارة جديدة</button>
+        <button onclick="nextScene('spend')">الإنفاق على شيء ترفيهي</button>
+        <div id="timer" class="hidden">10</div>
+    </div>
+
+    <div id="scene2-buy" class="scene hidden">
+        <h1>قرار غير حكيم...</h1>
+        <p>لقد خسرت المال ولم يتبق لديك شيء للادخار. حاول أن تكون أكثر حكمة في المرة القادمة.</p>
+        <button onclick="restart()">إعادة المحاولة</button>
+    </div>
+
+    <div id="scene3-invest" class="scene hidden">
+        <h1>استثمار ذكي!</h1>
+        <p>لقد استثمرت في مهارة جديدة ساعدتك في الحصول على وظيفة أفضل.</p>
+        <button onclick="finish()">إنهاء القصة</button>
+    </div>
+
+    <div id="scene3-spend" class="scene hidden">
+        <h1>لقد أنفقت أموالك بسرعة...</h1>
+        <p>كان من الأفضل الاستثمار في شيء يعود عليك بالفائدة.</p>
+        <button onclick="restart()">إعادة المحاولة</button>
+    </div>
+
+    <audio id="background-music" src="background-music.mp3" loop></audio>
+    <audio id="success-sound" src="success.mp3"></audio>
+    <audio id="failure-sound" src="failure.mp3"></audio>
+
+    <script src="script.js"></script>
+</body>
+</html>
