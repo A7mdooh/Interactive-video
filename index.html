@@ -20,16 +20,12 @@
         <h1>قرار صائب!</h1>
         <p>لقد اتخذت قرارًا جيدًا، سننتقل إلى المشهد التالي قريبًا.</p>
         <iframe id="success-video" width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        <button onclick="getAiAdvice('توفير المال')">اطلب نصيحة المساعد الذكي</button>
-        <div id="ai-advice"></div>
     </div>
 
     <div id="result-red" class="result hidden">
         <h1>قرار غير حكيم!</h1>
         <p>لقد كان من الأفضل اتخاذ قرار آخر. سننتقل إلى المشهد التالي قريبًا.</p>
         <iframe id="failure-video" width="560" height="315" src="https://www.youtube.com/embed/5NV6Rdv1a3I?autoplay=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-        <button onclick="getAiAdvice('شراء الهاتف')">اطلب نصيحة المساعد الذكي</button>
-        <div id="ai-advice"></div>
     </div>
 
     <div id="scene2-save" class="scene hidden">
@@ -51,13 +47,15 @@
         <button onclick="restart()">إعادة المحاولة</button>
     </div>
 
+    <!-- عنصر لعرض الشخصية التفاعلية -->
+    <div id="character" class="character hidden">
+        <img src="character_happy.png" alt="Character" id="character-image">
+        <p id="character-text">أحسنت!</p>
+    </div>
+
     <!-- مؤقت ونظام النقاط -->
     <div id="timer" class="hidden">10</div>
     <div id="score">النقاط: 0</div>
-
-    <!-- إضافة الأصوات -->
-    <audio id="success-sound" src="success.mp3"></audio>
-    <audio id="failure-sound" src="failure.mp3"></audio>
 
     <!-- تضمين ملف JavaScript -->
     <script src="script.js"></script>
