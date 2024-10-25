@@ -5,19 +5,17 @@ function chooseOption(option) {
     if (option === 'save') {
         document.getElementById('result-green').classList.remove('hidden');
         playSound('success-sound');
-        playVideo('success-video');
         setTimeout(() => {
             document.getElementById('result-green').classList.add('hidden');
             document.getElementById('scene2-save').classList.remove('hidden');
-        }, 5000); // الانتظار لمدة 5 ثوانٍ أو حسب طول الفيديو
+        }, 10000); // الانتظار لمدة 10 ثوانٍ أو حسب طول الفيديو
     } else if (option === 'buy') {
         document.getElementById('result-red').classList.remove('hidden');
         playSound('failure-sound');
-        playVideo('failure-video');
         setTimeout(() => {
             document.getElementById('result-red').classList.add('hidden');
             document.getElementById('scene2-save').classList.remove('hidden');
-        }, 5000); // الانتظار لمدة 5 ثوانٍ أو حسب طول الفيديو
+        }, 10000); // الانتظار لمدة 10 ثوانٍ أو حسب طول الفيديو
     }
 }
 
@@ -39,11 +37,6 @@ function playSound(soundId) {
     document.getElementById(soundId).play();
 }
 
-function playVideo(videoId) {
-    const video = document.getElementById(videoId);
-    video.play();
-}
-
 function restart() {
     document.querySelectorAll('.scene, .result').forEach(scene => {
         scene.classList.add('hidden');
@@ -60,8 +53,3 @@ function finish() {
 function changeBackgroundColor(color) {
     document.body.style.backgroundColor = color;
 }
-
-// تشغيل الموسيقى عند تحميل الصفحة
-document.addEventListener('DOMContentLoaded', () => {
-    document.getElementById('success-sound').play();
-});
